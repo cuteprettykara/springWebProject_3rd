@@ -23,7 +23,7 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"
 		p:dataSource-ref="dataSource"
 		p:configLocation="classpath:mybatis-config.xml"
-		p:mapperLocations="classpath:mappers/**/*Mapper.xml"
+		p:mapperLocations="classpath*:org/zerock/persistence/*Mapper.xml"
 	/>
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" 

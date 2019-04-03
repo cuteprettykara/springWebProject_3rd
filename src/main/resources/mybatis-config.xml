@@ -6,8 +6,8 @@
  	<typeAliases>
 		<package name="org.zerock.domain" />
 	</typeAliases>
-<!--
-	<mappers>
-		<mapper resource="net/slipp/dao/users/UserMapper.xml" />
+
+<!-- 	<mappers>
+		<mapper resource="org/zerock/persistence/boardMapper.xml" />
 	</mappers> -->
 </configuration>
