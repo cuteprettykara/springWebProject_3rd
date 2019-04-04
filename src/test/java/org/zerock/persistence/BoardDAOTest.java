@@ -5,19 +5,26 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("file:webapp/WEB-INF/spring/root-context.xml")
 public class BoardDAOTest {
+	
+	private static final Logger log = LoggerFactory.getLogger(BoardDAOTest.class);
 	
 	public static final int TEST_BNO = 1;
 
@@ -67,6 +74,34 @@ public class BoardDAOTest {
 		dao.create(vo);
 		
 		assertThat(dao.listAll().size(), is(2));
+	}
+	
+	@Test
+	public void listPage() throws Exception {
+		int page = 3;
+		
+		List<BoardVO> list = dao.listPage(page);
+		
+		assertThat(list.size(), is(10));
+		
+		for (BoardVO boardVO : list) {
+			log.info("boardVO : {}", boardVO);
+		}
+	}
+	
+	@Test
+	public void listCriteria() throws Exception {
+		Criteria cri = new Criteria();
+		cri.setPage(2);
+		cri.setPerPageNum(20);
+		
+		List<BoardVO> list = dao.listCriteria(cri);
+		
+		assertThat(list.size(), is(20));
+		
+		for (BoardVO boardVO : list) {
+			log.info("boardVO : {}", boardVO);
+		}
 	}
 
 }
