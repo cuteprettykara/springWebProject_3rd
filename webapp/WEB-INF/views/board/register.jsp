@@ -15,7 +15,7 @@
 				</div>
 				<!-- /.box-header -->
 
-<form role="form" method="post">
+<form role="form" method="post" action="/board/register">
 	<div class="box-body">
 		<div class="form-group">
 			<label for="exampleInputEmail1">Title</label> 
