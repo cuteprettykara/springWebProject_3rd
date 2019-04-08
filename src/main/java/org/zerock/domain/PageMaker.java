@@ -62,11 +62,25 @@ public class PageMaker {
 		prev = startPage == 1 ? false : true;
 	}
 	
+	/* 검색 조건이 없을 때 사용*/
 	public String makeQuery(int page) {
 		UriComponents uriComponents =
 				UriComponentsBuilder.newInstance()
 					.queryParam("page", page)
 					.queryParam("perPageNum", this.cri.getPerPageNum())
+					.build();
+		
+		return uriComponents.toString();
+	}
+	
+	/* 검색 조건이 있을 때 사용*/
+	public String makeSearch(int page) {
+		UriComponents uriComponents =
+				UriComponentsBuilder.newInstance()
+					.queryParam("page", page)
+					.queryParam("perPageNum", this.cri.getPerPageNum())
+					.queryParam("searchType", ((SearchCriteria)cri).getSearchType())
+					.queryParam("keyword", ((SearchCriteria)cri).getKeyword())
 					.build();
 		
 		return uriComponents.toString();
