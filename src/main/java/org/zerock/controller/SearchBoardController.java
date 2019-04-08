@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
-import org.zerock.domain.Criteria;
 import org.zerock.domain.PageMaker;
 import org.zerock.domain.SearchCriteria;
 import org.zerock.service.BoardService;
@@ -39,20 +38,22 @@ public class SearchBoardController {
 		
 		rttr.addFlashAttribute("msg", "SUCCESS");
 		
-		return "redirect:/board/listAll";
+		return "redirect:/sboard/list";
 	}
 	
 	@RequestMapping(value="/removePage", method=RequestMethod.POST)
 	public String remove(@RequestParam("bno") int bno, 
-			Criteria cri,
+			SearchCriteria cri,
 			RedirectAttributes rttr) throws Exception {
 		service.remove(bno);
 		
 		rttr.addAttribute("page", cri.getPage());
 		rttr.addAttribute("perPageNum", cri.getPerPageNum());
+		rttr.addAttribute("searchType", cri.getSearchType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 		rttr.addFlashAttribute("msg", "SUCCESS");
 		
-		return "redirect:/board/listPage";
+		return "redirect:/sboard/list";
 	}
 		
 	/* 검색조건 추가 */
@@ -71,29 +72,31 @@ public class SearchBoardController {
 	
 	@RequestMapping(value="/readPage", method=RequestMethod.GET)
 	public void readPage(@RequestParam("bno") int bno, 
-			@ModelAttribute("cri") Criteria cri,
+			@ModelAttribute("cri") SearchCriteria cri,
 			Model model) throws Exception {
 		model.addAttribute(service.read(bno));
 	}
 	
 	@RequestMapping(value="/modifyPage", method=RequestMethod.GET)
 	public void modifyPagingGET(@RequestParam("bno") int bno, 
-			@ModelAttribute("cri") Criteria cri,
+			@ModelAttribute("cri") SearchCriteria cri,
 			Model model) throws Exception {
 		model.addAttribute(service.read(bno));
 	}
 	
 	@RequestMapping(value="/modifyPage", method=RequestMethod.POST)
 	public String modifyPagingPOST(BoardVO board, 
-			Criteria cri,
+			SearchCriteria cri,
 			RedirectAttributes rttr) throws Exception {
 		log.info("BoardVO {}", board);
 		service.modify(board);
 		
 		rttr.addAttribute("page", cri.getPage());
 		rttr.addAttribute("perPageNum", cri.getPerPageNum());
+		rttr.addAttribute("searchType", cri.getSearchType());
+		rttr.addAttribute("keyword", cri.getKeyword());
 		rttr.addFlashAttribute("msg", "SUCCESS");
 		
-		return "redirect:/board/listPage";
+		return "redirect:/sboard/list";
 	}
 }
