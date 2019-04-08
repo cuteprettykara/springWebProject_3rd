@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.SearchCriteria;
 
 @Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -102,6 +103,25 @@ public class BoardDAOTest {
 		for (BoardVO boardVO : list) {
 			log.info("boardVO : {}", boardVO);
 		}
+	}
+	
+	@Test
+	public void listSearch() throws Exception {
+		SearchCriteria cri = new SearchCriteria();
+		cri.setPage(1);
+		cri.setSearchType("t");
+		cri.setKeyword("타이틀");
+		
+		List<BoardVO> list = dao.listSearch(cri);
+		
+		assertThat(list.size(), is(10));
+		
+		for (BoardVO boardVO : list) {
+			log.info("boardVO : {}", boardVO);
+		}
+		
+		log.info("===================================");
+		log.info("COUNT : {}", dao.listSearchCount(cri));
 	}
 
 }

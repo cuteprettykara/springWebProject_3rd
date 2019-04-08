@@ -58,11 +58,11 @@ public class SearchBoardController {
 	/* 검색조건 추가 */
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public void listPage(@ModelAttribute("cri") SearchCriteria cri, Model model) throws Exception {
-		model.addAttribute("list", service.listCriteria(cri));
+		model.addAttribute("list", service.listSearch(cri));
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(service.getCountPaging());
+		pageMaker.setTotalCount(service.listSearchCount(cri));
 		
 		log.info("PageMaker : {}", pageMaker);
 		

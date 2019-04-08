@@ -62,17 +62,17 @@
 <div class="text-center">
 	<ul class="pagination">
 		<c:if test="${pageMaker.prev}">
-			<li><a href="${pageMaker.startPage-1}">&laquo;</a></li>
+			<li><a href="list${pageMaker.makeSearch(pageMaker.startPage-1)}">&laquo;</a></li>
 		</c:if>
 		
 		<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-			<li <c:out value="${pageMaker.cri.page == idx ? 'class=active' : '' }" />>
-				<a href="${idx}">${idx}</a>
+			<li <c:out value="${pageMaker.cri.page == idx ? 'class=active' : '' }"/>>
+				<a href="list${pageMaker.makeSearch(idx)}">${idx}</a>
 			</li>
 		</c:forEach>
 		
-		<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-			<li><a href="${pageMaker.endPage+1}">&raquo;</a></li>
+		<c:if test="${pageMaker.next}">
+			<li><a href="list${pageMaker.makeSearch(pageMaker.endPage + 1)}">&raquo;</a></li>
 		</c:if>
 	</ul>
 </div>
@@ -104,17 +104,6 @@
     if(result == 'SUCCESS'){
     	alert("처리가 완료되었습니다.");
     }
-    
-    $(".pagination li a").on("click", function(event) {
-		event.preventDefault();
-		var targetPage = $(this).attr("href");
-		
-		var jobForm = $("#jobForm");
-		
-		jobForm.find("[name='page']").val(targetPage);
-		jobForm.attr("action", "/sboard/list").attr("method", "get");
-		jobForm.submit();
-	});
     
     $("#searchBtn").on("click", function(event) {
 		self.location = "list"
