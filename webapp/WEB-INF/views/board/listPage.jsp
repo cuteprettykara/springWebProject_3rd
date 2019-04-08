@@ -48,17 +48,17 @@
 <div class="text-center">
 	<ul class="pagination">
 		<c:if test="${pageMaker.prev}">
-			<li><a href="listPage${pageMaker.makeQuery(pageMaker.startPage-1)}">&laquo;</a></li>
+			<li><a href="${pageMaker.startPage-1}">&laquo;</a></li>
 		</c:if>
 		
 		<c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
 			<li <c:out value="${pageMaker.cri.page == idx ? 'class=active' : '' }" />>
-				<a href="listPage${pageMaker.makeQuery(idx)}">${idx}</a>
+				<a href="${idx}">${idx}</a>
 			</li>
 		</c:forEach>
 		
 		<c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-			<li><a href="listPage${pageMaker.makeQuery(pageMaker.endPage+1)}">&raquo;</a></li>
+			<li><a href="${pageMaker.endPage+1}">&raquo;</a></li>
 		</c:if>
 	</ul>
 </div>
@@ -79,6 +79,11 @@
 </div>
 <!-- /.content-wrapper -->
 
+<form id="jobForm">
+  <input type='hidden' name="page" value=${pageMaker.cri.perPageNum}>
+  <input type='hidden' name="perPageNum" value=${pageMaker.cri.perPageNum}>
+</form>
+
 <script>
     var result = '${msg}';
     
@@ -86,6 +91,16 @@
     	alert("처리가 완료되었습니다.");
     }
     
-    </script>
+    $(".pagination li a").on("click", function(event) {
+		event.preventDefault();
+		var targetPage = $(this).attr("href");
+		
+		var jobForm = $("#jobForm");
+		
+		jobForm.find("[name='page']").val(targetPage);
+		jobForm.attr("action", "/board/listPage").attr("method", "get");
+		jobForm.submit();
+	});
+</script>
 
 <%@include file="../include/footer.jsp"%>
