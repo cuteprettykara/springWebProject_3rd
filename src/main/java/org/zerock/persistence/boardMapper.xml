@@ -100,7 +100,7 @@
 		 where bno > 0
 	]]>	 
 	
-	<include refid="search" />
+		<include refid="search" />
 	
 	<![CDATA[
 		 order by bno desc
@@ -110,12 +110,12 @@
 	
 	<select id="listSearchCount" resultType="int">
 	<![CDATA[
-		select count(*) 
+		select count(bno) 
 		  from tbl_board
 		 where bno > 0
 	]]>
-	</select>
 	
-	<insert id="search" />
+		<include refid="search" />
+	</select>
 	
 </mapper>

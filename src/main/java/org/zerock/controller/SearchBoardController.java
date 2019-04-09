@@ -63,7 +63,10 @@ public class SearchBoardController {
 		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
-		pageMaker.setTotalCount(service.listSearchCount(cri));
+		int cnt = service.listSearchCount(cri);
+		log.info("TOTAL COUNT: {}", cnt);
+		pageMaker.setTotalCount(cnt);
+//		pageMaker.setTotalCount(service.listSearchCount(cri));
 		
 		log.info("PageMaker : {}", pageMaker);
 		

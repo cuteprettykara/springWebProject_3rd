@@ -110,7 +110,7 @@ public class BoardDAOTest {
 		SearchCriteria cri = new SearchCriteria();
 		cri.setPage(1);
 		cri.setSearchType("t");
-		cri.setKeyword("타이틀");
+		cri.setKeyword("111");
 		
 		List<BoardVO> list = dao.listSearch(cri);
 		
