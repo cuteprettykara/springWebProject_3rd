@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
+import org.zerock.domain.Criteria;
 import org.zerock.domain.ReplyVO;
 import org.zerock.persistence.ReplyDAO;
 
@@ -32,6 +33,16 @@ public class ReplyServiceImpl implements ReplyService {
 	@Override
 	public int removeReply(Integer rno) throws Exception {
 		return dao.delete(rno);
+	}
+
+	@Override
+	public List<ReplyVO> listPage(Integer bno, Criteria cri) throws Exception {
+		return dao.listPage(bno, cri);
+	}
+
+	@Override
+	public int countPaging(Integer bno) throws Exception {
+		return dao.countPaging(bno);
 	}
 
 }

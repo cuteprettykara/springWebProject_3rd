@@ -10,6 +10,9 @@ public class ReplyVO {
 	private Date regdate;
 	private Date updatedate;
 	
+	public ReplyVO() {
+	}
+	
 	public ReplyVO(Integer bno, String replytext, String replyer) {
 		this.bno = bno;
 		this.replytext = replytext;
