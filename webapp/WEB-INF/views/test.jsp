@@ -19,29 +19,71 @@
 			padding: 10px;
 			z-index: 1000;
 		}
-	</style>
+		
+		.pagination {
+			width: 100%;
+		}
+		
+		.pagination li {
+			list-style: none;
+			float: left;
+			padding: 3px;
+			border: 1px solid blue;
+			margin: 3px;
+		}
+		
+		.pagination li a {
+			margin: 3px;
+			text-decoration: none;
+		}
+</style>
 	
 	<script src="/resources/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 	
 	<script type="text/javascript">
 		var bno = 1;
+		var replyPage = 1;
+		
+		function printPaging(pageMaker) {
+			var str = "";
+			
+			if (pageMaker.prev) {
+				str += "<li><a href='" + (pageMaker.startPage-1) + "'>&laquo;</a></li>";
+			}
+			
+			for (var i = pageMaker.startPage ; i <= pageMaker.endPage; i++) {
+				var strClass = pageMaker.cri.page === i ? "class=active" : "";
+				str += "<li " + strClass  + "><a href='" + i + "'>" + i + "</a></li>"
+			}
+			
+			if (pageMaker.next) {
+				str += "<li><a href='" + (pageMaker.endPage+1) + "'>&raquo;</a></li>";
+			}
+			
+			$(".pagination").html(str);
+		}
 
-		function getAllList() {
-			$.getJSON("/replies/all/" + bno, function(data) {
-				console.log(data.length);
+		function getPageList(page) {
+			$.getJSON("/replies/" + bno + "/" + page, function(data) {
+				console.log(data.list.length);
 				
 				var str = "";
-				$(data).each(function() {
+				$(data.list).each(function() {
 					str += "<li data-rno='" + this.rno + "' class='replyLi'>"
 						+  this.rno + ":" + this.replytext
 						+  "<button>MOD</button></li>";
 				});
 				
 				$("#replies").html(str);
+				
+				printPaging(data.pageMaker);
 			});
 		}
 		
 		$(document).ready(function() {
+			
+			getPageList(1);	// JSP가 처음 동작하면 1페이지의 댓글을 가져오도록 한다.
+			
 			$("#replyAddBtn").on("click", function() {
 				var replyer = $("#newReplyWriter").val();
 				var replytext = $("#newReplyText").val();
@@ -62,7 +104,7 @@
 					success: function(result) {
 						if (result == 'SUCCESS') {
 							alert('등록되었습니다.');
-							getAllList();
+							getPageList(replyPage);
 						} else {
 							alert(result);
 						}
@@ -96,7 +138,8 @@
 							alert('삭제되었습니다.');
 							$("#modDiv").hide("slow");
 							
-							getAllList();
+							replyPage = 1;
+							getPageList(replyPage);
 						} else {
 							alert(result);
 						}
@@ -124,7 +167,7 @@
 							alert('수정되었습니다.');
 							$("#modDiv").hide("slow");
 							
-							getAllList();
+							getPageList(replyPage);
 						} else {
 							alert(result);
 						}
@@ -132,9 +175,19 @@
 				});
 			});
 			
+			$("#closeBtn").on("click", function() {
+				$("#modDiv").hide("slow");
+			});
 			
 			
-			getAllList();
+			$(".pagination").on("click", "li a", function(event) {
+				event.preventDefault();
+				
+				replyPage = $(this).attr("href");
+				
+				getPageList(replyPage);
+			})
+			
 		});
 	</script>
 </head>
@@ -156,6 +209,8 @@
 		
 	</ul>
 
+	<ul class='pagination'>
+	</ul>
 
 	<div id='modDiv' style="display: none;">
 		<div class='modal-title'></div>
