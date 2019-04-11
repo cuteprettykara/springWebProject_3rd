@@ -41,9 +41,9 @@
 	<!-- /.box-body -->
 
 	<div class="box-footer">
-		<button type="submit" class="btn btn-warning">Modify</button>
-		<button type="submit" class="btn btn-danger">Remove</button>
-		<button type="button" class="btn btn-primary">GO List</button>
+		<button type="submit" class="btn btn-warning" id="modifyBtn">Modify</button>
+		<button type="submit" class="btn btn-danger" id="removeBtn">Remove</button>
+		<button type="button" class="btn btn-primary" id="goListBtn">GO List</button>
 	</div>
 
 
@@ -168,18 +168,18 @@
 	$(document).ready(function() {
 		var formObj = $("form[role='form']");
 		
-		$(".btn-warning").on("click", function() {
+		$("#modifyBtn").on("click", function() {
 			formObj.attr("action", "/sboard/modifyPage");
 			formObj.attr("method", "get");
 			formObj.submit();
 		});
 		
-		$(".btn-danger").on("click", function() {
+		$("#removeBtn").on("click", function() {
 			formObj.attr("action", "/sboard/removePage");
 			formObj.submit();
 		});
 
-		$(".btn-primary").on("click", function() {
+		$("#goListBtn").on("click", function() {
 			formObj.attr("method", "get");
 			formObj.attr("action", "/sboard/list");
 			formObj.submit();
@@ -199,6 +199,37 @@
 			replyPage = $(this).attr("href");
 			
 			getPageList("/replies/" + bno + "/" + replyPage);
+		});
+		
+		$("#replyAddBtn").on("click", function() {
+			var replyer = $("#newReplyWriter").val();
+			var replytext = $("#newReplyText").val();
+			
+				$.ajax({
+				type: 'post',
+				url: "/replies",
+				headers : {
+					"Content-Type": "application/json",
+					"X-HTTP-Method-Override" : "POST"
+				},
+				dataType: 'text',
+				data: JSON.stringify({
+					bno: bno,
+					replyer: replyer,
+					replytext: replytext
+				}),
+				success: function(result) {
+					if (result == 'SUCCESS') {
+						alert('등록되었습니다.');
+						replyPage = 1;
+						getPageList("/replies/" + bno + "/" + replyPage);
+						replyerObj.val("");
+						replytextObj.val("");
+					} else {
+						alert(result);
+					}
+				}
+			});
 		});
 	});
 </script>
