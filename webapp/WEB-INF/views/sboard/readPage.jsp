@@ -78,9 +78,8 @@
 			<!-- The time line -->
 			<ul class="timeline">
 				<!-- timeline time label -->
-				<li class="time-label" id="repliesDiv">
-					<span class="bg-green">Replies List </span>
-				</li>
+				<li class="time-label" id="repliesDiv"><span class="bg-green">Replies
+						List </span></li>
 			</ul>
 
 			<div class='text-center'>
@@ -92,6 +91,26 @@
 		</div>
 	</div>
 	
+	<!-- Modal -->
+	<div id="modifyModal" class="modal modal-primary fade" role="dialog">
+	  <div class="modal-dialog">
+	    <!-- Modal content-->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title"></h4>
+	      </div>
+	      <div class="modal-body" data-rno>
+	        <p><input type="text" id="replytext" class="form-control"></p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-info" id="replyModBtn">Modify</button>
+	        <button type="button" class="btn btn-danger" id="replyDelBtn">DELETE</button>
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 	
 </section>
 <!-- /.content -->
@@ -157,6 +176,8 @@
 		$.getJSON(pageUri, function(data) {
 			printData(data.list, $("#repliesDiv"), $("#template"));
 			printPaging(data.pageMaker, $(".pagination"));
+			
+			$("#modifyModal").modal('hide');
 		});
 	}
 </script>
@@ -225,6 +246,60 @@
 						getPageList("/replies/" + bno + "/" + replyPage);
 						replyerObj.val("");
 						replytextObj.val("");
+					} else {
+						alert(result);
+					}
+				}
+			});
+		});
+		
+		$(".timeline").on("click", ".replyLi", function() {
+			var reply = $(this);
+			
+			$("#replytext").val(reply.find(".timeline-body").text());
+			$(".modal-title").html(reply.attr("data-rno"));
+		});
+		
+		$("#replyDelBtn").on("click", function() {
+			var rno = $(".modal-title").text();
+			
+			$.ajax({
+				type: 'delete',
+				url: "/replies/" + rno,
+				headers : {
+					"Content-Type": "application/json",
+					"X-HTTP-Method-Override" : "DELETE"
+				},
+				success: function(result) {
+					if (result == 'SUCCESS') {
+						alert('삭제되었습니다.');
+						getPageList("/replies/" + bno + "/" + replyPage);
+					} else {
+						alert(result);
+					}
+				}
+			});
+		});
+		
+		$("#replyModBtn").on("click", function() {
+			var rno = $(".modal-title").text();
+			var replytext = $("#replytext").val();
+			
+			$.ajax({
+				type: 'put',
+				url: "/replies/" + rno,
+				headers : {
+					"Content-Type": "application/json",
+					"X-HTTP-Method-Override" : "PUT"
+				},
+				dataType: 'text',
+				data: JSON.stringify({
+					replytext: replytext
+				}),
+				success: function(result) {
+					if (result == 'SUCCESS') {
+						alert('수정되었습니다.');
+						getPageList("/replies/" + bno + "/" + replyPage);
 					} else {
 						alert(result);
 					}
