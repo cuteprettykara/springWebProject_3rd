@@ -244,8 +244,8 @@
 						alert('등록되었습니다.');
 						replyPage = 1;
 						getPageList("/replies/" + bno + "/" + replyPage);
-						replyerObj.val("");
-						replytextObj.val("");
+						$("#newReplyWriter").val("");
+						$("#newReplyText").val("");
 					} else {
 						alert(result);
 					}
