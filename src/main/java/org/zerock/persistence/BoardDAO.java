@@ -25,4 +25,7 @@ public interface BoardDAO {
 	
 	/* 댓글 카운트 증가 또는 감소 */
 	public int updateReplyCnt(Integer bno, int amount) throws Exception;
+	
+	/* 조회 카운트 증가 */
+	public int updateViewCnt(Integer bno) throws Exception;
 }
