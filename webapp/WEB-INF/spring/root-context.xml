@@ -17,6 +17,8 @@
 		p:dataSource-ref="dataSource"
 	/>
 	
+	<tx:annotation-driven/>
+	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"
 		p:driverClassName="${database.driverClassName}"
 		p:url="${database.url}"
