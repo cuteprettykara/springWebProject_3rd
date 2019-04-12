@@ -1,6 +1,8 @@
 package org.zerock.persistence;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -77,5 +79,14 @@ public class BoardDAOImpl implements BoardDAO {
 	@Override
 	public int listSearchCount(SearchCriteria cri) throws Exception {
 		return sqlSession.selectOne(namespace + ".listSearchCount", cri);
+	}
+
+	@Override
+	public int updateReplyCnt(Integer bno, int amount) throws Exception {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("bno", bno);
+		paramMap.put("amount", amount);
+		
+		return sqlSession.update(namespace + ".updateReplyCnt", paramMap);
 	}
 }

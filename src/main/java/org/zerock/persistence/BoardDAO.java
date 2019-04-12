@@ -22,4 +22,7 @@ public interface BoardDAO {
 	/* 동적 SQL 처리 */
 	public List<BoardVO> listSearch(SearchCriteria cri) throws Exception;
 	public int listSearchCount(SearchCriteria cri) throws Exception;
+	
+	/* 댓글 카운트 증가 또는 감소 */
+	public int updateReplyCnt(Integer bno, int amount) throws Exception;
 }

@@ -17,4 +17,7 @@ public interface ReplyDAO {
 	/* paging 처리 */
 	public List<ReplyVO> listPage(Integer bno, Criteria cri) throws Exception;
 	public int countPaging(Integer bno) throws Exception;
+	
+	/* 게시물의 번호(bno) 알아내기 */
+	public int getBno(Integer rno) throws Exception;
 }
