@@ -37,6 +37,10 @@
 	
 	<context:component-scan base-package="org.zerock.persistence" />
 	<context:component-scan base-package="org.zerock.service" />
+	<context:component-scan base-package="org.zerock.aop" />
 	
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<!-- 향후 XML 방식으로 AOP 기능을 설정할 때 사용하기 위해 준비. 단 이 책의 예제는 애노테이션을 이용해서 설정합니다. -->
+	<aop:config></aop:config>
 </beans>
