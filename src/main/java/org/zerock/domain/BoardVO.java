@@ -58,10 +58,10 @@ public class BoardVO {
 	public void setViewcnt(int viewcnt) {
 		this.viewcnt = viewcnt;
 	}
-	public int getReplcnt() {
+	public int getReplycnt() {
 		return replycnt;
 	}
-	public void setReplcnt(int replycnt) {
+	public void setReplycnt(int replycnt) {
 		this.replycnt = replycnt;
 	}
 
