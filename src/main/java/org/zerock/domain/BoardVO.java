@@ -11,6 +11,8 @@ public class BoardVO {
 	private int viewcnt;
 	private int replycnt;
 	
+	private String[] files;
+	
 	public BoardVO() {
 	}
 	
@@ -63,6 +65,12 @@ public class BoardVO {
 	}
 	public void setReplycnt(int replycnt) {
 		this.replycnt = replycnt;
+	}
+	public String[] getFiles() {
+		return files;
+	}
+	public void setFiles(String[] files) {
+		this.files = files;
 	}
 
 	@Override

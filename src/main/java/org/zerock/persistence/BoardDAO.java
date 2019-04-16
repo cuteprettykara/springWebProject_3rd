@@ -28,4 +28,7 @@ public interface BoardDAO {
 	
 	/* 조회 카운트 증가 */
 	public int updateViewCnt(Integer bno) throws Exception;
+	
+	/* 파일 첨부 등록 */
+	public void addAttach(String fullName) throws Exception;
 }
