@@ -137,5 +137,24 @@
 		
 		that.get(0).submit();
 	});
+	
+	$(".uploadedList").on("click", ".delbtn", function(event) {
+		
+		event.preventDefault();
+		
+		var that = $(this);
+		
+		$.ajax({
+			type: "post",
+			url: "/deleteFile",
+			dataType: "text",
+			data: {fileName:$(this).attr("href")},
+			success: function(result) {
+				if (result == 'deleted') {
+					that.closest("li").remove();
+				}
+			}
+		});
+	})
 </script>
 
