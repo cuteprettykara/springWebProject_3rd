@@ -2,7 +2,10 @@
 	pageEncoding="UTF-8"%>
 
 <%@include file="../include/header.jsp"%>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.1/handlebars.js"></script>
+<!-- handlebars -->
+<script src="/resources/handlebars/handlebars-v4.1.2.js"></script>
+
+<script src="/resources/js/upload.js" type="text/javascript"></script>
 
 <!-- Main content -->
 <section class="content">
@@ -39,6 +42,7 @@
 		</div>
 	</div>
 	<!-- /.box-body -->
+	<ul class="mailbox-attachments clearfix uploadedList"></ul>
 
 	<div class="box-footer">
 		<button type="submit" class="btn btn-warning" id="modifyBtn">Modify</button>
@@ -135,6 +139,17 @@
 {{/each}}
 </script>
 
+<script id="templateAttach" type="text/x-handlebars-template">
+<li data-src='{{fullName}}'>
+  <span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
+  <div class="mailbox-attachment-info">
+	<a href="{{getLink}}" class="mailbox-attachment-name">
+		{{fileName}}
+    </a>
+  </div>
+</li>                
+</script> 
+
 <script>
 	Handlebars.registerHelper("prettifyDate", function(timeValue) {
 		var dateObj = new Date(timeValue);
@@ -190,6 +205,15 @@
 	
 	$(document).ready(function() {
 		var formObj = $("form[role='form']");
+		var template = Handlebars.compile($("#templateAttach").html());
+		
+		$.getJSON("/sboard/getAttach/" + bno, function(list) {
+			$(list).each(function() {
+				var fileInfo = getFileInfo(this);
+				var html = template(fileInfo);
+				$(".uploadedList").append(html);
+			});
+		});
 		
 		$("#modifyBtn").on("click", function() {
 			formObj.attr("action", "/sboard/modifyPage");
@@ -307,7 +331,7 @@
 					}
 				}
 			});
-		});
+		});		
 	});
 </script>
 
