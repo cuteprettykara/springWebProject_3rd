@@ -66,7 +66,7 @@
 
 	<div class="box-footer">
 		<button type="submit" class="btn btn-warning" id="modifyBtn">Modify</button>
-		<button type="submit" class="btn btn-danger" id="removeBtn">Remove</button>
+		<button type="button" class="btn btn-danger" id="removeBtn">Remove</button>
 		<button type="button" class="btn btn-primary" id="goListBtn">GO List</button>
 	</div>
 
@@ -102,8 +102,11 @@
 			<!-- The time line -->
 			<ul class="timeline">
 				<!-- timeline time label -->
-				<li class="time-label" id="repliesDiv"><span class="bg-green">Replies
-						List <small id="replycntSmall">[ ${boardVO.replycnt} ]</small> </span></li>
+				<li class="time-label" id="repliesDiv">
+					<span class="bg-green">Replies List 
+						<small>[ <span id="replycntSmall">${boardVO.replycnt}</span> ]</small>
+					</span>
+				</li>
 			</ul>
 
 			<div class='text-center'>
@@ -214,7 +217,7 @@
 			
 			$("#modifyModal").modal('hide');
 
-			$("#replycntSmall").text("[ " + data.pageMaker.totalCount + " ]");
+			$("#replycntSmall").text(data.pageMaker.totalCount);
 		});
 	}
 </script>
@@ -242,8 +245,31 @@
 		});
 		
 		$("#removeBtn").on("click", function() {
-			formObj.attr("action", "/sboard/removePage");
-			formObj.submit();
+			var replyCnt =  $("#replycntSmall").html();
+			
+			if(replyCnt > 0 ){
+				alert("댓글이 달린 게시물을 삭제할 수 없습니다.");
+				return;
+			}	
+			
+			var arr = [];
+			$(".uploadedList li").each(function(index){
+				 arr.push($(this).attr("data-src"));
+			});
+			
+			console.log(arr);
+		 	if(arr.length > 0){
+				$.post("/deleteAllFiles",{files:arr}, function(){
+					
+					formObj.attr("action", "/sboard/removePage");
+					formObj.submit();
+					
+				});
+			} else {
+				
+				formObj.attr("action", "/sboard/removePage");
+				formObj.submit();
+			}
 		});
 
 		$("#goListBtn").on("click", function() {

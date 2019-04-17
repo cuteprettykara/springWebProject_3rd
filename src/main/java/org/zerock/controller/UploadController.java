@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.util.MediaUtils;
@@ -126,6 +127,29 @@ public class UploadController {
 	@ResponseBody
 	@RequestMapping("/deleteFile")
 	public ResponseEntity<String> deleteFile(String fileName) throws IOException {
+
+		removeFile(fileName);
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+	}
+
+	@ResponseBody
+	@RequestMapping("/deleteAllFiles")
+	public ResponseEntity<String> deleteFile(@RequestParam("files[]") String[] files) throws IOException {
+		log.info("deleteAllFiles : {}", files);
+		
+		if(files == null || files.length == 0) {
+		      return new ResponseEntity<String>("deleted", HttpStatus.OK);
+		}
+		
+		for (String fileName : files) {
+			removeFile(fileName);		
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
+	}
+	
+	private void removeFile(String fileName) {
 		log.info("deleteFile : {}", fileName);
 		
 		String formatName = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -142,7 +166,5 @@ public class UploadController {
 		// 이미지 타입일 경우 : 썸네일 이미지 삭제
 		// 이미지 타입이 아닐 경우 : 파일 삭제
 		new File(UPLOAD_PATH + fileName.replace('/', File.separatorChar)).delete();
-		
-		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 	}
 }

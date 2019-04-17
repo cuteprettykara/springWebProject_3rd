@@ -4,6 +4,22 @@
 
 <%@include file="../include/header.jsp"%>
 
+<!-- handlebars -->
+<script src="/resources/handlebars/handlebars-v4.1.2.js"></script>
+
+<script src="/resources/js/upload.js" type="text/javascript"></script>
+
+<style>
+.fileDrop {
+  width: 80%;
+  height: 100px;
+  border: 1px dotted gray;
+  background-color: lightslategrey;
+  margin: auto;
+  
+}
+</style>
+
 <!-- Main content -->
 <section class="content">
 	<div class="row">
@@ -39,12 +55,20 @@
 			<label for="exampleInputEmail1">Writer</label> 
 			<input type="text" name="writer" class="form-control" readonly="readonly" value="${boardVO.writer}">
 		</div>
+		<div class="form-group">
+			<label for="exampleInputEmail1">File DROP Here</label>
+			<div class="fileDrop"></div>
+		</div>
 	</div>
 	<!-- /.box-body -->
 </form>
 
 
 	<div class="box-footer">
+		<div>
+			<hr>
+		</div>
+		<ul class="mailbox-attachments clearfix uploadedList"></ul>
 		<button type="button" class="btn btn-primary">Save</button>
 		<button type="button" class="btn btn-warning">Cancel</button>
 	</div>
@@ -64,6 +88,15 @@
 <script>
 	$(document).ready(function() {
 		var formObj = $("form[role='form']");
+		var bno = ${boardVO.bno};
+		
+		$.getJSON("/sboard/getAttach/" + bno, function(list) {
+			$(list).each(function() {
+				var fileInfo = getFileInfo(this);
+				var html = template(fileInfo);
+				$(".uploadedList").append(html);
+			});
+		});
 		
 		$(".btn-primary").on("click", function() {
 			formObj.submit();
@@ -77,3 +110,85 @@
 </script>
 
 <%@include file="../include/footer.jsp"%>
+
+<script id="template" type="text/x-handlebars-template">
+<li>
+  <span class="mailbox-attachment-icon has-img"><img src="{{imgsrc}}" alt="Attachment"></span>
+  <div class="mailbox-attachment-info">
+	<a href="{{getLink}}" class="mailbox-attachment-name">
+		{{fileName}}
+    </a>
+	<a href="{{fullName}}" class="btn btn-default btn-xs pull-right delbtn">
+		<i class="fa fa-fw fa-remove"></i>
+	</a>
+  </div>
+</li>                
+</script> 
+
+<script>
+	var template = Handlebars.compile($("#template").html());
+	
+	$(".fileDrop").on("dragenter dragover", function(event) {
+		event.preventDefault();
+	});
+	
+	$(".fileDrop").on("drop", function(event) {
+		event.preventDefault();
+		
+		var files = event.originalEvent.dataTransfer.files;
+		
+		var file = files[0];
+		
+		var formData = new FormData();
+		formData.append("file", file);
+		
+		$.ajax({
+			type: "post",
+			url: "/uploadAjax",
+			dataType: "text",
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(data) {
+				var fileInfo = getFileInfo(data);
+				var html = template(fileInfo);
+				$(".uploadedList").append(html);
+ 			}
+		});
+	});
+	
+	$("form[role='form']").submit(function(event) {
+		event.preventDefault();
+		
+		var that = $(this);
+		
+		var str = "";
+		
+		$(".uploadedList .delbtn").each(function(index) {
+			str += "<input type='hidden' name='files[" + index + "]' value='" + $(this).attr("href") + "'>";
+		});
+		
+		that.append(str);
+		
+		that.get(0).submit();
+	});
+	
+	$(".uploadedList").on("click", ".delbtn", function(event) {
+		
+		event.preventDefault();
+		
+		var that = $(this);
+		
+		$.ajax({
+			type: "post",
+			url: "/deleteFile",
+			dataType: "text",
+			data: {fileName:$(this).attr("href")},
+			success: function(result) {
+				if (result == 'deleted') {
+					that.closest("li").remove();
+				}
+			}
+		});
+	})
+</script>
