@@ -27,4 +27,15 @@
 		<beans:property name="maxUploadSize" value="10485760"></beans:property>
 	</beans:bean>
 	
+	<beans:bean id="sampleInterceptor" class="org.zerock.interceptor.SampleInterceptor"></beans:bean>
+	
+	
+	<interceptors>
+		<interceptor>
+			<mapping path="/doA" />
+			<mapping path="/doB" />
+			<beans:ref bean="sampleInterceptor"/>
+		</interceptor>
+	</interceptors>
+	
 </beans:beans>
