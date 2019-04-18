@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <%@include file="../include/header.jsp"%>
 <!-- handlebars -->
@@ -65,8 +66,10 @@
 	<ul class="mailbox-attachments clearfix uploadedList"></ul>
 
 	<div class="box-footer">
-		<button type="submit" class="btn btn-warning" id="modifyBtn">Modify</button>
-		<button type="button" class="btn btn-danger" id="removeBtn">Remove</button>
+		<c:if test="${login.uid == boardVO.writer}">
+			<button type="submit" class="btn btn-warning" id="modifyBtn">Modify</button>
+			<button type="button" class="btn btn-danger" id="removeBtn">Remove</button>		
+		</c:if>
 		<button type="button" class="btn btn-primary" id="goListBtn">GO List</button>
 	</div>
 
