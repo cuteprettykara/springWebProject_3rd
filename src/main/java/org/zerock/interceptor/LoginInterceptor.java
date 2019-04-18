@@ -32,10 +32,15 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 		
 		Object userVO = modelAndView.getModelMap().get("userVO");
 		
+		HttpSession session = request.getSession();
+		
 		if (userVO != null) {
 			log.info("new login success");
-			request.getSession().setAttribute(LOGIN, userVO);
-			response.sendRedirect("/");
+			session.setAttribute(LOGIN, userVO);
+			
+			Object dest = session.getAttribute("dest");
+			
+			response.sendRedirect(dest == null ? "/" : (String)dest);
 		}
 	}
 }
