@@ -90,16 +90,25 @@
 				<div class="box-header">
 					<h3 class="box-title">ADD NEW REPLY</h3>
 				</div>
-				<div class="box-body">
-					<label for="exampleInputEmail1">Writer</label> 
-					<input class="form-control" type="text" placeholder="USER ID" id="newReplyWriter"> 
-					<label for="exampleInputEmail1">Reply Text</label> 
-					<input class="form-control" type="text" placeholder="REPLY TEXT" id="newReplyText">
-				</div>
-				<!-- /.box-body -->
-				<div class="box-footer">
-					<button type="button" class="btn btn-primary" id="replyAddBtn">ADD REPLY</button>
-				</div>
+				<c:choose>
+					<c:when test="${empty login}">
+						<div class="box-body">
+							<div><a href="javascript:goLogin();">Login Please</a></div>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<div class="box-body">
+							<label for="exampleInputEmail1">Writer</label> 
+							<input class="form-control" type="text" placeholder="USER ID" id="newReplyWriter" readonly="readonly" value="${login.uid}"> 
+							<label for="exampleInputEmail1">Reply Text</label> 
+							<input class="form-control" type="text" placeholder="REPLY TEXT" id="newReplyText">
+						</div>
+						<!-- /.box-body -->
+						<div class="box-footer">
+							<button type="button" class="btn btn-primary" id="replyAddBtn">ADD REPLY</button>
+						</div>					
+					</c:otherwise>
+				</c:choose>
 			</div>
 			
 			<!-- The time line -->
@@ -158,8 +167,10 @@
 			<h3 class="timeline-header"><strong>{{rno}}</strong> -{{replyer}}</h3>
 			<div class="timeline-body">{{replytext}} </div>
 			<div class="timeline-footer">
+			{{#eqReplyer replyer}}
      			<a class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modifyModal">Modify</a>
-    		</div>
+    		{{/eqReplyer}}
+			</div>
 		</div>			
 	</li>
 {{/each}}
@@ -183,6 +194,14 @@
 		var month = dateObj.getMonth() + 1;
 		var date = dateObj.getDate();
 		return year + "/" + month + "/" + date;
+	});
+	
+	Handlebars.registerHelper("eqReplyer", function(replyer, block) {
+		var accum = "";
+		if (replyer == '${login.uid}') {
+			accum += block.fn();
+		}
+		return accum;
 	});
 	
 	var printData = function(replyArr, target, templateObject) {
@@ -222,6 +241,10 @@
 
 			$("#replycntSmall").text(data.pageMaker.totalCount);
 		});
+	}
+	
+	function goLogin(){
+		self.location ="/user/login";
 	}
 </script>
 
@@ -319,7 +342,7 @@
 						alert('등록되었습니다.');
 						replyPage = 1;
 						getPageList("/replies/" + bno + "/" + replyPage);
-						$("#newReplyWriter").val("");
+//						$("#newReplyWriter").val("");
 						$("#newReplyText").val("");
 					} else {
 						alert(result);
