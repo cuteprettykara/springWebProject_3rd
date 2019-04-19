@@ -1,5 +1,7 @@
 package org.zerock.service;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Service;
@@ -16,6 +18,16 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserVO login(LoginDTO dto) throws Exception {
 		return dao.login(dto);
+	}
+
+	@Override
+	public void keepLogin(String uid, String sessionId, Date next) {
+		dao.keepLogin(uid, sessionId, next);
+	}
+
+	@Override
+	public UserVO checkUserWithSessionkey(String value) {
+		return dao.checkUserWithSessionkey(value);
 	}
 
 }
