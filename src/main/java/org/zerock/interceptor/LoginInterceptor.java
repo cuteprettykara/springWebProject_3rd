@@ -39,16 +39,18 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		
-		Object userVO = modelAndView.getModelMap().get("userVO");
+		Object obj = modelAndView.getModelMap().get("userVO");
 		
 		
 		// 로그인에 성공했다면
-		if (userVO != null) {
+		if (obj != null) {
 			log.info("new login success");
 			
 			HttpSession session = request.getSession();
 			
-			session.setAttribute(LOGIN, userVO);
+			session.setAttribute(LOGIN, obj);
+
+			UserVO userVO = (UserVO) obj;
 			
 			// remember me를 체크했을 경우
 			if (request.getParameter("useCookie") != null) {
@@ -64,12 +66,12 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 				
 				// 쿠키 만료일자를 DB에 보관
 				Date sessionLimit = new Date(System.currentTimeMillis() + (1000 * amount));
-				service.keepLogin(((UserVO) userVO).getUid(), session.getId(), sessionLimit);
+				service.keepLogin(userVO.getUid(), session.getId(), sessionLimit);
 			}
 			
 			Object dest = session.getAttribute("dest");
 			
-			response.sendRedirect(dest == null ? "/" : (String)dest);
+			response.sendRedirect(dest == null ? "/sboard/list" : (String)dest);
 		}
 	}
 }
